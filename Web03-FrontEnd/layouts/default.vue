@@ -5,28 +5,28 @@ const isOpen = ref(false);
 function toggleSidebar() {
   isOpen.value = !isOpen.value;
 }
-// const links: ILink[] = [
-//   {
-//     link: "/home",
-//     linkName: "Home",
-//     icon: <Icon name="uil:github" style="color: black" />,
-//   },
-//   {
-//     link: "/new",
-//     linkName: "New",
-//     icon: <Icon name="uil:github" style="color: black" />,
-//   },
-//   {
-//     link: "/random",
-//     linkName: "Randomly view",
-//     icon: <Icon name="uil:github" style="color: black" />,
-//   },
-//   {
-//     link: "/profile",
-//     linkName: "Profile",
-//     icon: <Icon name="uil:github" style="color: black" />,
-//   },
-// ];
+const links: ILink[] = [
+  {
+    link: "/home",
+    linkName: "Home",
+    icon: <Icon name="uil:github" style="color: black" />,
+  },
+  {
+    link: "/new",
+    linkName: "New",
+    icon: <Icon name="uil:github" style="color: black" />,
+  },
+  {
+    link: "/random",
+    linkName: "Randomly view",
+    icon: <Icon name="uil:github" style="color: black" />,
+  },
+  {
+    link: "/profile",
+    linkName: "Profile",
+    icon: <Icon name="uil:github" style="color: black" />,
+  },
+];
 </script>
 
 <template>
@@ -52,12 +52,11 @@ function toggleSidebar() {
           ></path>
         </svg>
       </button> -->
-      <!-- <div v-for="(link, index) in links" :key="index">
+      <div v-for="(link, index) in links" :key="index">
         <NavLink :link="link.link" :linkName="link.linkName"
           >{{ link.icon }}
         </NavLink>
-      </div> -->
-      <Icon name="uil:github" style="color: black" />
+      </div>
     </div>
 
     <!-- Main Content -->
