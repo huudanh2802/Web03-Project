@@ -52,11 +52,11 @@ const links: ILink[] = [
           ></path>
         </svg>
       </button> -->
-      <div v-for="(link, index) in links" :key="index">
+      <!-- <div v-for="(link, index) in links" :key="index">
         <NavLink :link="link.link" :linkName="link.linkName"
           >{{ link.icon }}
         </NavLink>
-      </div>
+      </div> -->
     </div>
 
     <!-- Main Content -->
