@@ -1,8 +1,32 @@
-<script setup>
+<script setup lang="ts">
+import { type ILink } from "../types/layouts";
+
 const isOpen = ref(false);
 function toggleSidebar() {
   isOpen.value = !isOpen.value;
 }
+// const links: ILink[] = [
+//   {
+//     link: "/home",
+//     linkName: "Home",
+//     icon: <Icon name="uil:github" style="color: black" />,
+//   },
+//   {
+//     link: "/new",
+//     linkName: "New",
+//     icon: <Icon name="uil:github" style="color: black" />,
+//   },
+//   {
+//     link: "/random",
+//     linkName: "Randomly view",
+//     icon: <Icon name="uil:github" style="color: black" />,
+//   },
+//   {
+//     link: "/profile",
+//     linkName: "Profile",
+//     icon: <Icon name="uil:github" style="color: black" />,
+//   },
+// ];
 </script>
 
 <template>
@@ -11,7 +35,7 @@ function toggleSidebar() {
     <div
       :class="['bg-gray-800 text-white h-screen p-4', isOpen ? 'w-64' : 'w-16']"
     >
-      <button @click="toggleSidebar" class="mb-4 focus:outline-none">
+      <!-- <button @click="toggleSidebar" class="mb-4 focus:outline-none">
         <svg
           class="w-6 h-6"
           :class="isOpen ? 'transform rotate-180' : ''"
@@ -27,20 +51,13 @@ function toggleSidebar() {
             d="M15 19l-7-7 7-7"
           ></path>
         </svg>
-      </button>
-
-      <nav v-if="isOpen" class="space-y-2">
-        <Link/>
-
-        <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">Home</a>
-        <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">About</a>
-        <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700"
-          >Services</a
-        >
-        <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700"
-          >Contact</a
-        >
-      </nav>
+      </button> -->
+      <!-- <div v-for="(link, index) in links" :key="index">
+        <NavLink :link="link.link" :linkName="link.linkName"
+          >{{ link.icon }}
+        </NavLink>
+      </div> -->
+      <Icon name="uil:github" style="color: black" />
     </div>
 
     <!-- Main Content -->
