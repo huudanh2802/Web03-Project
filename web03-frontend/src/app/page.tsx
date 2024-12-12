@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
+import SigninContainer from "@/containers/signin/signin-container";
 
 export default function Home() {
   return (
-
     <div>
-      <Button className="bg-blue-700">Click me</Button>
+      <SigninContainer />
     </div>
   );
 }
