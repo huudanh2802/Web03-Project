@@ -16,7 +16,4 @@ import java.time.LocalDateTime;
 public class TestEntity extends AbstractEntity<Integer> {
 
     private String name;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
