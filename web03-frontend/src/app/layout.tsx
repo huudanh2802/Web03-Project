@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export const metadata: Metadata = {
   title: "CalicoNote",
@@ -19,13 +18,9 @@ export default function RootLayout({
       <body className={`antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
-          disableTransitionOnChange
         >
-          <div className="flex row-auto items-end">
-            <ModeToggle />
-          </div>
           {children}
         </ThemeProvider>
       </body>
