@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -6,25 +7,43 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { IPreviewNote } from "@/interfaces";
+import { INote } from "@/interfaces";
+import { noteSlice } from "@/lib/features/note/noteSlice";
+import { useAppDispatch } from "@/lib/hook";
 
 export default function PreviewNote({
   previewNote,
+  selected,
 }: {
-  previewNote: IPreviewNote;
+  previewNote: INote;
+  selected: boolean;
 }) {
+  const dispatch = useAppDispatch();
+  const changeSelectedNote = () => {
+    dispatch(noteSlice.actions.changeSelectedNote(previewNote.id));
+  };
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Card Title</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
-    </Card>
+    <div>
+      <Card className={selected ? "bg-[#232938]" : ""}>
+        <a
+          onClick={() => changeSelectedNote()}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <CardHeader>
+            <CardTitle className="text-white truncate">
+              {previewNote.note}
+            </CardTitle>
+            <CardDescription>{previewNote.date}</CardDescription>
+          </CardHeader>
+          {/* <CardContent>
+          <p>Card Content</p>
+        </CardContent> */}
+          {/* <CardFooter>
+          <p>Card Footer</p>
+        </CardFooter> */}
+        </a>
+      </Card>
+    </div>
   );
 }

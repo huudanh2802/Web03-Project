@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Provider } from "react-redux";
 
 export const metadata: Metadata = {
   title: "CalicoNote",
@@ -16,13 +17,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={`antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-        >
-          {children}
-        </ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+            {children}
+          </ThemeProvider>
       </body>
     </html>
   );

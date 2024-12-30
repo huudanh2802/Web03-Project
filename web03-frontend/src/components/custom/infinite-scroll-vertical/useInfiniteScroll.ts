@@ -1,34 +1,30 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react'
 
-export function useInfiniteScroll(loadMore: () => void) {
-  const [isFetching, setIsFetching] = useState(false);
+export function useInfiniteScroll(callback: () => void) {
+  const [isFetching, setIsFetching] = useState(false)
 
-  const handleScroll = useCallback(() => {
-    const scrollContainer = document.getElementById("scroll-container");
-    if (!scrollContainer) return;
-
-    const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
-    if (scrollHeight - (scrollTop + clientHeight) < 200) {
-      setIsFetching(true);
+  const handleScroll = useCallback((entries: IntersectionObserverEntry[]) => {
+    const target = entries[0]
+    if (target.isIntersecting && !isFetching) {
+      setIsFetching(true)
     }
-  }, []);
+  }, [isFetching])
 
   useEffect(() => {
-    const scrollContainer = document.getElementById("scroll-container");
-    if (scrollContainer) {
-      scrollContainer.addEventListener("scroll", handleScroll);
-    }
+    if (!isFetching) return
+    callback()
+  }, [isFetching, callback])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleScroll, { threshold: 1.0 })
+    const element = document.getElementById('scroll-trigger')
+    if (element) observer.observe(element)
+
     return () => {
-      if (scrollContainer) {
-        scrollContainer.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [handleScroll]);
+      if (element) observer.unobserve(element)
+    }
+  }, [handleScroll])
 
-  useEffect(() => {
-    if (!isFetching) return;
-    loadMore();
-  }, [isFetching, loadMore]);
-
-  return { isFetching, setIsFetching };
+  return { isFetching, setIsFetching }
 }
+

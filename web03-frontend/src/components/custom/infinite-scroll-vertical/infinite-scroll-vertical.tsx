@@ -1,66 +1,103 @@
-'use client'
+"use client";
 
-import React, { useState, useCallback, useRef } from 'react';
-import { useInfiniteScroll } from './useInfiniteScroll';
+import PreviewNote from "@/containers/dashboard/preview-note";
+import { INote } from "@/interfaces";
+import { useAppSelector } from "@/lib/hook";
+import { useRef } from "react";
 
-interface Item {
-  id: number;
-  title: string;
-}
+// interface Item {
+//   id: number;
+//   content: string;
+// }
 
-const InfiniteScrollVertical: React.FC = () => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [page, setPage] = useState(1);
+export function InfiniteScroll({ noteList }: { noteList: INote[] }) {
+  // const [items, setItems] = useState<Item[]>([]);
+  // const [page, setPage] = useState(1);
+  // const [isFetching, setIsFetching] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const fetchItems = useCallback(async () => {
-    // Simulating an API call
-    const newItems = Array.from({ length: 10 }, (_, i) => ({
-      id: items.length + i + 1,
-      title: `Item ${items.length + i + 1}`
-    }));
-    setItems(prevItems => [...prevItems, ...newItems]);
-    setPage(prevPage => prevPage + 1);
-    setIsFetching(false);
-  }, [items.length]);
+  const selectedNote = useAppSelector((state) => state.note.selectedNote);
 
-  const { isFetching, setIsFetching } = useInfiniteScroll(fetchItems);
+  // const fetchMoreItems = useCallback(async () => {
+  //   setIsFetching(true);
+  //   // Simulate API call
+  //   await new Promise((resolve) => setTimeout(resolve, 1000));
+  //   const newItems = Array.from({ length: 10 }, (_, i) => ({
+  //     id: (page - 1) * 10 + i + 1,
+  //     content: `Item ${(page - 1) * 10 + i + 1}`,
+  //   }));
+  //   setItems((prevItems) => [...prevItems, ...newItems]);
+  //   setPage((prevPage) => prevPage + 1);
+  //   setIsFetching(false);
+  // }, [page]);
 
-  const lastItemRef = useCallback((node: HTMLDivElement) => {
-    if (observerRef.current) observerRef.current.disconnect();
-    observerRef.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && !isFetching) {
-        fetchItems();
-      }
-    });
-    if (node) observerRef.current.observe(node);
-  }, [fetchItems, isFetching]);
+  // useEffect(() => {
+  //   const options = {
+  //     root: containerRef.current,
+  //     rootMargin: "0px",
+  //     threshold: 1.0,
+  //   };
+
+  //   const observer = new IntersectionObserver((entries) => {
+  //     const target = entries[0];
+  //     if (target.isIntersecting && !isFetching) {
+  //       fetchMoreItems();
+  //     }
+  //   }, options);
+
+  //   observerRef.current = observer;
+
+  //   return () => {
+  //     if (observerRef.current) {
+  //       observerRef.current.disconnect();
+  //     }
+  //   };
+  // }, [fetchMoreItems, isFetching]);
+
+  // useEffect(() => {
+  //   const currentObserver = observerRef.current;
+  //   const triggerElement = document.getElementById("scroll-trigger");
+
+  //   if (currentObserver && triggerElement) {
+  //     currentObserver.observe(triggerElement);
+  //   }
+
+  //   return () => {
+  //     if (currentObserver && triggerElement) {
+  //       currentObserver.unobserve(triggerElement);
+  //     }
+  //   };
+  // }, [items]);
 
   return (
-    <div className="w-full h-[calc(100vh-8rem)] overflow-hidden">
+    <div className="w-full max-w-md mx-auto p-4">
       <div
-        id="scroll-container"
-        className="h-full overflow-y-auto space-y-4 p-4 scrollbar-hide"
-        style={{ scrollSnapType: 'y mandatory' }}
+        ref={containerRef}
+        className="h-full overflow-y-auto border-none rounded-lg  scrollbar-hide"
       >
-        {items.map((item, index) => (
-          <div
-            key={item.id}
-            ref={index === items.length - 1 ? lastItemRef : null}
-            className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center scroll-snap-align-start"
-          >
-            <p className="text-xl font-semibold">{item.title}</p>
-          </div>
-        ))}
-        {isFetching && (
-          <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-            <p className="text-xl font-semibold">Loading...</p>
-          </div>
-        )}
+        <div className="space-y-4">
+          {noteList.map((note) => (
+            <div key={note.id} className="p-4 rounded">
+              <PreviewNote
+                previewNote={note}
+                selected={note.id === selectedNote.id}
+              />
+            </div>
+          ))}
+          {/* {isFetching && <LoadingPlaceholder />} */}
+          <div id="scroll-trigger" className="h-1" />
+        </div>
       </div>
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none; /* Chrome, Safari and Opera */
+        }
+      `}</style>
     </div>
   );
-};
-
-export default InfiniteScrollVertical;
-
+}
