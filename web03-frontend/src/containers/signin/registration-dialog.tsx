@@ -8,14 +8,17 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ArrowRightCircleIcon } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 
 export default function RegistrationDialog({
   isRegistrationDialogOpen,
   setIsRegistrationDialogOpen,
+  setIsConfirmEmailDialogOpen,
 }: {
   isRegistrationDialogOpen: boolean;
   setIsRegistrationDialogOpen: Dispatch<SetStateAction<boolean>>;
+  setIsConfirmEmailDialogOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
     <Dialog
@@ -25,33 +28,53 @@ export default function RegistrationDialog({
       <DialogContent className="sm:max-w-[425px">
         <DialogHeader>
           <DialogTitle className="flex row-auto justify-center">
-            Registration
+            <p className="text-3xl"> Registration</p>
           </DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
+        <div>
+          <div className="mx-20 my-4">
             <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
+              className="bg-[#1F1F1F] placeholder:text-[#484848] rounded-2xl border-[#898989]"
+              id="email"
+              placeholder="Email address"
+              type="email"
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
+          <div className="mx-20 my-4">
             <Input
+              className="bg-[#1F1F1F] placeholder:text-[#484848] rounded-2xl border-[#898989]"
               id="username"
-              defaultValue="@peduarte"
-              className="col-span-3"
+              placeholder="Username"
+            />
+          </div>
+          <div className="mx-20 my-4">
+            <Input
+              className="bg-[#1F1F1F] placeholder:text-[#484848] rounded-2xl border-[#898989]"
+              id="password"
+              type="password"
+              placeholder="Password"
+            />
+          </div>
+          <div className="mx-20 mt-4">
+            <Input
+              className="bg-[#1F1F1F] placeholder:text-[#484848] rounded-2xl border-[#898989]"
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirm Password"
             />
           </div>
         </div>
-        <DialogFooter className="flex row-auto justify-center">
-          <Button type="submit">Save changes</Button>
+        <DialogFooter className="flex flex-col items-center">
+          <Button
+            onClick={() => {
+              setIsRegistrationDialogOpen(false);
+              setIsConfirmEmailDialogOpen(true);
+            }}
+            size="icon"
+            variant="ghost"
+          >
+            <ArrowRightCircleIcon size={28} color="#009FFF" />
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
