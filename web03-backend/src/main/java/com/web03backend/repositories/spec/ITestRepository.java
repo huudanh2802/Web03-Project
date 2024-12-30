@@ -1,4 +1,4 @@
-package com.web03backend.repositories;
+package com.web03backend.repositories.spec;
 
 import com.web03backend.domain.TestEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
