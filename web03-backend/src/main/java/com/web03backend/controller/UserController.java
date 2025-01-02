@@ -5,7 +5,9 @@ import com.web03backend.dtos.UserDTO;
 import com.web03backend.service.imp.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +28,9 @@ public class UserController {
     private ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> findAll(@PageableDefault(size = 10, sort = {"id"}) Pageable pageable) {
+    public ResponseEntity<List<UserDTO>> findAll() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+
         List<UserDTO> tests = userService.findAll(pageable).getContent().stream()
                 .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
                 .collect(Collectors.toList());
