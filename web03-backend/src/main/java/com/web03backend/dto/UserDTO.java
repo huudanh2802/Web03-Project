@@ -1,4 +1,4 @@
-package com.web03backend.dtos;
+package com.web03backend.dto;
 
 import lombok.Data;
 

@@ -1,0 +1,40 @@
+
+services:
+  # nextjs:
+  #   build:
+  #     context: ../web03-frontend.
+  #     dockerfile: NextDockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NODE_ENV: production
+  #     PORT: 3000
+  #     HOSTNAME: "0.0.0.0"
+  #   volumes:
+  #     - .:/app
+  #   depends_on:
+  #     - app
+  # app:
+  #   build:
+  #     context: ../web03-backend.
+  #     dockerfile: SpringDockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/web03database
+  #     SPRING_DATASOURCE_USERNAME: admin
+  #     SPRING_DATASOURCE_PASSWORD: admin
+  #   depends_on:
+  #     - db
+  db:
+    image: "postgres:latest"
+    environment:
+      - "POSTGRES_DB=web03database"
+      - "POSTGRES_PASSWORD=admin"
+      - "POSTGRES_USER=admin"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:

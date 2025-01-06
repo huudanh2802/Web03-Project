@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public abstract class AbstractEntity <ID extends Serializable> implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(updatable = false)
     @CreationTimestamp
