@@ -24,7 +24,7 @@ export default function SigninContainer() {
         className="my-4 rounded-3xl"
         onClick={() => setIsSigninDialogOpen(!isSigninDialogOpen)}
       >
-        Sign in button
+        Sign in
       </Button>
 
       <SigninDialog
