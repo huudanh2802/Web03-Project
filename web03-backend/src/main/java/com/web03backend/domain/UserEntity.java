@@ -1,12 +1,13 @@
 package com.web03backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -15,13 +16,22 @@ import lombok.NoArgsConstructor;
         @UniqueConstraint(columnNames = "email")
 })
 public class UserEntity extends AbstractEntity<Integer> {
+    @Setter
+    @Getter
     @NotBlank
     private String username;
+    @Setter
+    @Getter
     @NotBlank
     private String password;
+    @Setter
+    @Getter
     @NotBlank
     private String email;
     private String avatar;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<NoteEntity> listNotes = new ArrayList<>();
 
     public UserEntity(){
         super();
@@ -33,28 +43,5 @@ public class UserEntity extends AbstractEntity<Integer> {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
 
