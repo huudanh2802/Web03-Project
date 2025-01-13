@@ -6,13 +6,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@NoArgsConstructor
 @Table(name="note")
+@Setter
+@Getter
 public class NoteEntity extends AbstractEntity{
     @ManyToOne
     private UserEntity user;
@@ -23,5 +25,13 @@ public class NoteEntity extends AbstractEntity{
     NoteEntity(String note){
         super();
         this.note = note;
+    }
+    public NoteEntity(){
+        super();
+    }
+    public NoteEntity(UserEntity user){
+        super();
+        this.note="";
+        this.user = user;
     }
 }

@@ -1,9 +1,5 @@
 package com.web03backend.dto.auth;
 
-import com.web03backend.dto.note.ViewNoteDTO;
-
-import java.util.List;
-
 public class JwtResponse {
     private String token;
     private String type = "Bearer";

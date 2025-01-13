@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ViewNoteDTO {
+public class NoteDTO {
     private Long id;
     private String note;
     private LocalDateTime createdAt;
