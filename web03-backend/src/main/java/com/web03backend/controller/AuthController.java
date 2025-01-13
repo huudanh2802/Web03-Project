@@ -1,10 +1,10 @@
 package com.web03backend.controller;
 
 import com.web03backend.domain.UserEntity;
-import com.web03backend.dto.requests.LoginRequest;
-import com.web03backend.dto.requests.SignupRequest;
-import com.web03backend.dto.responses.JwtResponse;
-import com.web03backend.dto.responses.MessageResponse;
+import com.web03backend.dto.auth.LoginRequest;
+import com.web03backend.dto.auth.SignupRequest;
+import com.web03backend.dto.auth.JwtResponse;
+import com.web03backend.dto.auth.MessageResponse;
 import com.web03backend.repositories.spec.IUserRepository;
 import com.web03backend.security.jwt.JwtUtils;
 import com.web03backend.security.services.CustomUserDetails;

@@ -1,4 +1,8 @@
-package com.web03backend.dto.responses;
+package com.web03backend.dto.auth;
+
+import com.web03backend.dto.note.ViewNoteDTO;
+
+import java.util.List;
 
 public class JwtResponse {
     private String token;
@@ -13,6 +17,8 @@ public class JwtResponse {
         this.username = username;
         this.email = email;
     }
+
+
 
     public String getAccessToken() {
         return token;

@@ -1,4 +1,4 @@
-package com.web03backend.dto.responses;
+package com.web03backend.dto.auth;
 
 public class MessageResponse {
     private String message;
