@@ -29,6 +29,18 @@ export const noteSlice = createSlice({
         );
       }
     },
+    addNewNote: (state, action: PayloadAction<INote>) => {
+      state.previewNoteList?.unshift(action.payload);
+      state.selectedNote = action.payload;
+    },
+    removeNote: (state, action: PayloadAction<number>) => {
+      state.previewNoteList = state.previewNoteList?.filter(
+        (note) => note.id !== action.payload
+      );
+      if (state.selectedNote?.id === action.payload) {
+        state.selectedNote = undefined;
+      }
+    },
     updateSelectedNote: (state, action: PayloadAction<string>) => {
       if (state.selectedNote) {
         state.selectedNote = {
@@ -36,17 +48,27 @@ export const noteSlice = createSlice({
           note: action.payload,
         };
         if (state.previewNoteList) {
-          state.previewNoteList[state.selectedNote.id] = {
-            ...state.selectedNote,
-            note: action.payload,
-          };
+          const index = state.previewNoteList.findIndex(
+            (note) => note.id === state.selectedNote?.id
+          );
+          if (index !== -1) {
+            state.previewNoteList[index] = {
+              ...state.selectedNote,
+              note: action.payload,
+            };
+          }
         }
       }
     },
   },
 });
 
-export const { setPreviewNoteList, updateSelectedNote, changeSelectedNote } =
-  noteSlice.actions;
+export const {
+  setPreviewNoteList,
+  updateSelectedNote,
+  changeSelectedNote,
+  addNewNote,
+  removeNote,
+} = noteSlice.actions;
 
 export default noteSlice.reducer;

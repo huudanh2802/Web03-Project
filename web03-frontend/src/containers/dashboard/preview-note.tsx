@@ -21,7 +21,6 @@ export default function PreviewNote({
 }) {
   const dispatch = useAppDispatch();
   const changeSelectedNote = () => {
-    console.log(previewNote.id);
     dispatch(noteSlice.actions.changeSelectedNote(previewNote.id));
   };
   return (

@@ -22,27 +22,30 @@ export const noteAPI = createApi({
     getNoteByUserId: builder.query<INote[], string>({
       query: (userId) => ({
         url: `note`,
-        params: { userId, page: 0, size: 10, sort: "id" },
+        params: { userId, page: 0, size: 10, sort: "createdAt" },
         method: "GET",
       }),
     }),
     createEmptyNoteByUser: builder.mutation<INote, string>({
       query: (userId) => ({
-        url: `${userId}`,
+        url: `note`,
+        params: { userId },
+
         method: "POST",
       }),
     }),
     updateNote: builder.mutation<INote, Omit<INote, "createdAt">>({
-      query: ({ id, ...patch }) => ({
-        url: ``,
+      query: ({  ...patch }) => ({
+        url: `note`,
         method: "PUT",
         body: patch,
       }),
     }),
     deleteNoteById: builder.mutation<{ success: boolean; id: number }, number>({
-      query(id) {
+      query(noteId) {
         return {
-          url: `${id}`,
+          url: `note`,
+          params: { noteId },
           method: "DELETE",
         };
       },

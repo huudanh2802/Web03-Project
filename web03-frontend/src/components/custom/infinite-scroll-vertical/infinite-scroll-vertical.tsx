@@ -3,7 +3,7 @@
 import PreviewNote from "@/containers/dashboard/preview-note";
 import { useAppSelector } from "@/lib/hook";
 import { INote } from "@/types";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 // interface Item {
 //   id: number;
@@ -70,6 +70,17 @@ export function InfiniteScroll({ noteList }: { noteList: INote[] }) {
   //   };
   // }, [items]);
 
+  const PreviewNoteList = useMemo(() => {
+    return noteList.map((note) => (
+      <div key={note.id} className="p-4 rounded">
+        <PreviewNote
+          previewNote={note}
+          selected={selectedNote ? note.id === selectedNote.id : false}
+        />
+      </div>
+    ));
+  }, [noteList, selectedNote]);
+
   return (
     <div className="w-full max-w-md mx-auto p-4">
       <div
@@ -77,14 +88,7 @@ export function InfiniteScroll({ noteList }: { noteList: INote[] }) {
         className="h-full overflow-y-auto border-none rounded-lg  scrollbar-hide"
       >
         <div className="space-y-4">
-          {noteList.map((note) => (
-            <div key={note.id} className="p-4 rounded">
-              <PreviewNote
-                previewNote={note}
-                selected={selectedNote ? note.id === selectedNote.id : false}
-              />
-            </div>
-          ))}
+          {PreviewNoteList}
           {/* {isFetching && <LoadingPlaceholder />} */}
           <div id="scroll-trigger" className="h-1" />
         </div>
