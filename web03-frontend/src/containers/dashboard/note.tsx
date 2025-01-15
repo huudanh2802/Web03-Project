@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { noteSlice } from "@/lib/features/note/noteSlice";
+import { noteSlice } from "@/lib/features/noteSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hook";
 import { Pen, Trash } from "lucide-react";
 import { useState } from "react";

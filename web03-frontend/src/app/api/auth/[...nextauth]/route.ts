@@ -27,7 +27,7 @@ const handler = NextAuth({
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-              },
+              },  
               body: JSON.stringify(loginRequest),
             }
           ).then((res) => {
@@ -36,9 +36,7 @@ const handler = NextAuth({
           });
           if (user) {
             return {
-              id: user.id,
-              name: user.username,
-              email: user.email,
+              ...user,
             };
           } else {
             return null;
@@ -66,19 +64,13 @@ const handler = NextAuth({
       return `${baseUrl}/dashboard`;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.email = token.email;
-        session.user.name = token.name;
+      if (token) {
+        session.user = token;
       }
       return session;
     },
-    async jwt({ token, account, user }) {
-      if (account) {
-        token.username = user.name;
-        token.accessToken = account.access_token;
-      }
-
-      return token;
+    async jwt({ token, user }) {
+      return { ...token, ...user };
     },
   },
 });

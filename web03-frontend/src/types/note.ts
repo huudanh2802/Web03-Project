@@ -1,5 +1,5 @@
 export interface INote {
   id: number;
-  date: string;
+  createdAt: string;
   note: string;
 }

@@ -7,9 +7,10 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { INote } from "@/interfaces";
-import { noteSlice } from "@/lib/features/note/noteSlice";
+import { noteSlice } from "@/lib/features/noteSlice";
 import { useAppDispatch } from "@/lib/hook";
+import { INote } from "@/types";
+import dayjs from "@/utils/dayjs";
 
 export default function PreviewNote({
   previewNote,
@@ -20,6 +21,7 @@ export default function PreviewNote({
 }) {
   const dispatch = useAppDispatch();
   const changeSelectedNote = () => {
+    console.log(previewNote.id);
     dispatch(noteSlice.actions.changeSelectedNote(previewNote.id));
   };
   return (
@@ -34,7 +36,9 @@ export default function PreviewNote({
             <CardTitle className="text-white truncate">
               {previewNote.note}
             </CardTitle>
-            <CardDescription>{previewNote.date}</CardDescription>
+            <CardDescription>
+              {dayjs(previewNote.createdAt).format("DD/MM/YYYY")}
+            </CardDescription>
           </CardHeader>
           {/* <CardContent>
           <p>Card Content</p>

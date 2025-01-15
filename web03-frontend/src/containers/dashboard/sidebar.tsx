@@ -1,7 +1,7 @@
 "use client";
-import { INote } from "@/interfaces";
 import { InfiniteScroll } from "@/components/custom/infinite-scroll-vertical/infinite-scroll-vertical";
 import SearchInput from "@/components/custom/search-input";
+import { INote } from "@/types";
 
 export default function Sidebar({
   previewNoteList,

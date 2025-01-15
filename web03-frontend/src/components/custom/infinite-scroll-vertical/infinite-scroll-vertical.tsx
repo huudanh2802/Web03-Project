@@ -1,8 +1,8 @@
 "use client";
 
 import PreviewNote from "@/containers/dashboard/preview-note";
-import { INote } from "@/interfaces";
 import { useAppSelector } from "@/lib/hook";
+import { INote } from "@/types";
 import { useRef } from "react";
 
 // interface Item {
@@ -81,7 +81,7 @@ export function InfiniteScroll({ noteList }: { noteList: INote[] }) {
             <div key={note.id} className="p-4 rounded">
               <PreviewNote
                 previewNote={note}
-                selected={note.id === selectedNote.id}
+                selected={selectedNote ? note.id === selectedNote.id : false}
               />
             </div>
           ))}
