@@ -7,6 +7,7 @@ import { useGetNoteByUserIdQuery } from "@/routes/note/note";
 import { useAppDispatch } from "@/lib/hook";
 import { setPreviewNoteList } from "@/lib/features/noteSlice";
 import AuthProvider from "@/providers/auth-provider";
+import { CircleUserRound } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -32,14 +33,14 @@ export default function DashboardLayout({
     dispatch(setPreviewNoteList(notes));
   }
   return (
-    <div>
-      <div className="flex row-auto items-end bg-[#393939] p-4">
+    <div className="overflow-hidden  ">
+      <div className="flex row-auto items-center justify-between bg-[#393939] p-4">
         <div className="flex row-auto text-4xl font-semibold">
-          <h1 className="text-yellow-500">Calico</h1>
-          <h1 className="text-gray-100">Note</h1>
+          <h1 className="text-[#dd7878]">Calico</h1>
+          <h1 className="text-[#e6e9ef]">Note</h1>
         </div>
         <div>
-          <p>{session?.user?.username}</p>
+          <CircleUserRound size={36}/>
         </div>
       </div>
       <AuthProvider>{children}</AuthProvider>

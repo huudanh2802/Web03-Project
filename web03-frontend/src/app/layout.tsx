@@ -24,7 +24,7 @@ export default function RootLayout({
         <Provider store={store}>
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="dark">
-              <ModeToggle />
+              {/* <ModeToggle /> */}
               {children}
             </ThemeProvider>
           </SessionProvider>
