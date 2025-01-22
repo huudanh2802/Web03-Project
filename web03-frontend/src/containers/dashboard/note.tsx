@@ -10,8 +10,9 @@ import {
 } from "@/routes/note/note";
 import { Pen, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { debounce } from "lodash";
+import { Editor } from "@tinymce/tinymce-react";
 
 export default function Note() {
   const selectedNote = useAppSelector((state) => state.note.selectedNote);
@@ -32,6 +33,14 @@ export default function Note() {
     }, 500),
     []
   );
+
+  const editorRef = useRef<unknown | null>(null);
+  const log = () => {
+    if (editorRef.current) {
+      console.log(editorRef.current.getContent());
+    }
+  };
+
   return (
     <div className="m-4">
       <div className="flex justify-between">
@@ -56,17 +65,53 @@ export default function Note() {
           <Pen color="#3471FF" />
         </Button>
       </div>
-      <div className="mt-12 mx-4">
-        {/* <Input className="bg-transparent border-none ring-offset-none h-lvh outline-none" value={testString} /> */}
-        <Textarea
-          value={selectedNote?.note}
-          onChange={(e) => {
-            const value = e.target.value;
-            debouncedUpdateNote(selectedNote!.id, value);
-            dispatch(noteSlice.actions.updateSelectedNote(value));
-          }}
-        />
-      </div>
+      {selectedNote && (
+        <>
+          <Editor
+            apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
+            onInit={(_evt, editor) => (editorRef.current = editor)}
+            value={selectedNote ? selectedNote.note : ""}
+            onEditorChange={(content) => {
+              debouncedUpdateNote(selectedNote!.id, content);
+              dispatch(noteSlice.actions.updateSelectedNote(content));
+            }}
+            init={{
+              height: 500,
+              menubar: false,
+              plugins: [
+                "advlist",
+                "autolink",
+                "lists",
+                "link",
+                "image",
+                "charmap",
+                "preview",
+                "anchor",
+                "searchreplace",
+                "visualblocks",
+                "code",
+                "fullscreen",
+                "insertdatetime",
+                "media",
+                "table",
+                "code",
+                "help",
+                "wordcount",
+              ],
+              toolbar:
+                "undo redo | blocks | " +
+                "bold italic forecolor | alignleft aligncenter " +
+                "alignright alignjustify | bullist numlist outdent indent | " +
+                "removeformat | help",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px; background-color:#1e1e1e; color:#ffffff; }",
+              skin: "oxide-dark",
+              content_css: "dark",
+              statusbar: false,
+            }}
+          />
+        </>
+      )}
     </div>
   );
 }

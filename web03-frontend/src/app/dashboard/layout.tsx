@@ -33,7 +33,7 @@ export default function DashboardLayout({
     dispatch(setPreviewNoteList(notes));
   }
   return (
-    <div className="overflow-hidden  ">
+    <div className="overflow-hidden max-h-[680px] ">
       <div className="flex row-auto items-center justify-between bg-[#393939] p-4">
         <div className="flex row-auto text-4xl font-semibold">
           <h1 className="text-[#dd7878]">Calico</h1>

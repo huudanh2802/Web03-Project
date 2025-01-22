@@ -23,6 +23,9 @@ export default function PreviewNote({
   const changeSelectedNote = () => {
     dispatch(noteSlice.actions.changeSelectedNote(previewNote.id));
   };
+  const preview = previewNote.note
+    ? previewNote.note.replace(/<(.|\n)*?>/g, "")
+    : "";
   return (
     <div>
       <Card className={selected ? "bg-[#232938]" : ""}>
@@ -32,9 +35,7 @@ export default function PreviewNote({
           rel="noopener noreferrer"
         >
           <CardHeader>
-            <CardTitle className="text-white truncate">
-              {previewNote.note}
-            </CardTitle>
+            <CardTitle className="text-white truncate">{preview}</CardTitle>
             <CardDescription>
               {dayjs(previewNote.createdAt).format("DD/MM/YYYY")}
             </CardDescription>
