@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { LoginFormInputs } from "@/interfaces";
+import { LoginFormInputs } from "@/types";
 import { ArrowRightCircleIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";

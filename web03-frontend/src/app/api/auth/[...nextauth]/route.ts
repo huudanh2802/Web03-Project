@@ -27,7 +27,7 @@ const handler = NextAuth({
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-              },  
+              },
               body: JSON.stringify(loginRequest),
             }
           ).then((res) => {
@@ -51,6 +51,7 @@ const handler = NextAuth({
   ],
   pages: {
     signIn: "/",
+    signOut: "/",
   },
   session: { strategy: "jwt" },
   callbacks: {

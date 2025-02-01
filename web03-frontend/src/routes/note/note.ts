@@ -1,5 +1,3 @@
-import { useAuthToken } from "@/hooks/use-auth-token";
-import { RootState } from "@/lib/store";
 import { INote } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
@@ -9,10 +7,10 @@ export const noteAPI = createApi({
   reducerPath: "noteAPI",
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/`,
-    prepareHeaders(headers, { getState }) {
-      const token = (getState() as RootState).auth.token;
+    async prepareHeaders(headers, { getState }) {
+      const token = await getSession();
       if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+        headers.set("Authorization", `Bearer ${token.user.accessToken}`);
       }
       headers.set("Access-Control-Allow-Origin", "*");
       return headers;
@@ -35,7 +33,7 @@ export const noteAPI = createApi({
       }),
     }),
     updateNote: builder.mutation<INote, Omit<INote, "createdAt">>({
-      query: ({  ...patch }) => ({
+      query: ({ ...patch }) => ({
         url: `note`,
         method: "PUT",
         body: patch,

@@ -1,13 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import noteReducer from "./features/noteSlice";
 import { noteAPI } from "@/routes/note/note";
-import authReducer from "./features/authSlice";
 
 export const store = configureStore({
   reducer: {
     note: noteReducer,
     [noteAPI.reducerPath]: noteAPI.reducer,
-    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(noteAPI.middleware),
