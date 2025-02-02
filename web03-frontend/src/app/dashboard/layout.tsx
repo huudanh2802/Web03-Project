@@ -17,6 +17,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const userId = session?.user?.id?.toString();
   const {
     data: notes,
@@ -29,7 +30,13 @@ export default function DashboardLayout({
 
   useEffect(() => {
     dispatch(setPreviewNoteList(notes));
-  }, [notes]);
+  }, [dispatch, notes]);
+
+  useEffect(() => {
+    console.log(status);
+    console.log(session);
+    if (status === "unauthenticated") router.push("/");
+  }, [router, status, session]);
 
   return (
     <div className="overflow-hidden max-h-[680px] ">

@@ -4,7 +4,6 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req }); // Check if user is authenticated
-  console.log(token);
   const protectedRoutes = ["/dashboard"]; // Define protected routes
   const isProtected = protectedRoutes.some((route) =>
     req.nextUrl.pathname.startsWith(route)

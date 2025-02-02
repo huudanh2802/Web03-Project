@@ -4,8 +4,10 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Provider } from "react-redux";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { store } from "@/lib/store";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 // export const metadata: Metadata = {
 //   title: "CalicoNote",
@@ -17,6 +19,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
