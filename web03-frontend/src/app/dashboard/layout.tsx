@@ -7,6 +7,8 @@ import { CircleUserRound } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Provider } from "react-redux";
+import { store } from "@/lib/store";
 
 export default function DashboardLayout({
   children,
@@ -25,23 +27,21 @@ export default function DashboardLayout({
     dispatch(setPreviewNoteList(notes));
   }, [dispatch, notes]);
 
-  useEffect(() => {
-    if (status === "unauthenticated") router.push("/");
-  }, [router, status, session]);
-
   return (
-    <div className="overflow-hidden max-h-[680px] ">
-      <div className="flex row-auto items-center justify-between bg-[#393939] p-4">
-        <div className="flex row-auto text-4xl font-semibold">
-          <h1 className="text-[#dd7878]">Calico</h1>
-          <h1 className="text-[#e6e9ef]">Note</h1>
+    <Provider store={store}>
+      <div className="overflow-hidden max-h-[680px] ">
+        <div className="flex row-auto items-center justify-between bg-[#393939] p-4">
+          <div className="flex row-auto text-4xl font-semibold">
+            <h1 className="text-[#dd7878]">Calico</h1>
+            <h1 className="text-[#e6e9ef]">Note</h1>
+          </div>
+          <div>
+            <CircleUserRound size={36} />
+          </div>
+          <Button onClick={() => signOut()}>Sign out</Button>
         </div>
-        <div>
-          <CircleUserRound size={36} />
-        </div>
-        <Button onClick={() => signOut()}>Sign out</Button>
+        {children}
       </div>
-      {children}
-    </div>
+    </Provider>
   );
 }

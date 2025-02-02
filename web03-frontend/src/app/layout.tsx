@@ -1,37 +1,29 @@
-"use client";
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Provider } from "react-redux";
-import { ModeToggle } from "@/components/ui/mode-toggle";
-import { SessionProvider, useSession } from "next-auth/react";
-import { store } from "@/lib/store";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { SessionProvider } from "next-auth/react";
+import GlobalProvider from "@/providers/global-provider";
+import AuthContainer from "@/containers/signin/auth-container";
 
-// export const metadata: Metadata = {
-//   title: "CalicoNote",
-//   description: "A cross platform inspired by ICloud Note",
-// };
+export const metadata: Metadata = {
+  title: "CalicoNote",
+  description: "A cross platform inspired by ICloud Note",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={`antialiased`}>
-        <Provider store={store}>
-          <SessionProvider>
-            <ThemeProvider attribute="class" defaultTheme="dark">
-              {/* <ModeToggle /> */}
-              {children}
-            </ThemeProvider>
-          </SessionProvider>
-        </Provider>
+        <GlobalProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark">
+            <AuthContainer>{children}</AuthContainer>
+          </ThemeProvider>
+        </GlobalProvider>
       </body>
     </html>
   );

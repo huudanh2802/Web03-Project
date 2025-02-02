@@ -6,14 +6,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    console.log(status);
-    console.log(session);
-    if (status === "authenticated") router.push("/dashboard");
-  }, [router, status, session]);
 
   return <SigninContainer />;
 }
