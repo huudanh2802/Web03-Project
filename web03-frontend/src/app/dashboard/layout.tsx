@@ -1,15 +1,12 @@
 "use client";
-import { Provider } from "react-redux";
-import { store } from "../../lib/store";
+import { Button } from "@/components/ui/button";
+import { setPreviewNoteList } from "@/lib/features/noteSlice";
+import { useAppDispatch } from "@/lib/hook";
+import { useGetNoteByUserIdQuery } from "@/routes/note/note";
+import { CircleUserRound } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useGetNoteByUserIdQuery } from "@/routes/note/note";
-import { useAppDispatch } from "@/lib/hook";
-import { setPreviewNoteList } from "@/lib/features/noteSlice";
-import AuthProvider from "@/providers/auth-provider";
-import { CircleUserRound } from "lucide-react";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
 
 export default function DashboardLayout({
   children,
@@ -19,11 +16,7 @@ export default function DashboardLayout({
   const { data: session, status } = useSession();
   const router = useRouter();
   const userId = session?.user?.id?.toString();
-  const {
-    data: notes,
-    error,
-    isLoading,
-  } = useGetNoteByUserIdQuery(userId ?? "", {
+  const { data: notes } = useGetNoteByUserIdQuery(userId ?? "", {
     skip: status !== "authenticated" || !userId,
   });
   const dispatch = useAppDispatch();
@@ -33,8 +26,6 @@ export default function DashboardLayout({
   }, [dispatch, notes]);
 
   useEffect(() => {
-    console.log(status);
-    console.log(session);
     if (status === "unauthenticated") router.push("/");
   }, [router, status, session]);
 
