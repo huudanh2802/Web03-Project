@@ -89,7 +89,7 @@ export default function SigninDialog({
                 {errors.password?.message}
               </span>
             </div>
-            <div className="mx-20 my-4 flex flex-row gap-2 justify-center">
+            {/* <div className="mx-20 my-4 flex flex-row gap-2 justify-center">
               <Checkbox id="rememberMe" />
               <label
                 htmlFor="rememberMe"
@@ -97,7 +97,7 @@ export default function SigninDialog({
               >
                 Keep me signed in
               </label>
-            </div>
+            </div> */}
           </div>
           <DialogFooter className="flex flex-col items-center">
             <Button type="submit" size="icon" variant="ghost">
