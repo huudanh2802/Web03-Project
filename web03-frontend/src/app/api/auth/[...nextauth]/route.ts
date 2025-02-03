@@ -1,8 +1,13 @@
-import NextAuth from "next-auth";
+import NextAuth, { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       id: "credentials",
       name: "credentials",
@@ -55,9 +60,29 @@ const handler = NextAuth({
   },
   session: { strategy: "jwt" },
   callbacks: {
-    async signIn(userDetail) {
-      if (Object.keys(userDetail).length === 0) {
-        return false;
+    async signIn({ user, account, profile }) {
+      if (account && account.provider === "google") {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/signin/google`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: user.email,
+              name: user.name,
+            }),
+          }
+        );
+        const data: User = await response.json();
+        if (response.ok) {
+          user.id = data.id;
+          user.accessToken = data.accessToken;
+          return true;
+        } else {
+          return false;
+        }
       }
       return true;
     },

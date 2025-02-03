@@ -6,6 +6,7 @@ import com.web03backend.dto.auth.JwtResponse;
 import com.web03backend.security.jwt.AuthEntryPointJwt;
 import com.web03backend.security.jwt.AuthTokenFilter;
 import com.web03backend.security.jwt.JwtUtils;
+import com.web03backend.security.provider.EmailAuthenticationProvider;
 import com.web03backend.security.services.CustomUserDetails;
 import com.web03backend.security.services.CustomUserDetailsService;
 import jakarta.servlet.ServletException;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -42,6 +44,8 @@ public class SecurityConfiguration {
     @Autowired
     CustomUserDetailsService userDetailsService;
 
+    @Autowired
+    private EmailAuthenticationProvider emailAuthenticationProvider;
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
@@ -74,26 +78,6 @@ public class SecurityConfiguration {
                                 .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2.loginPage("/login").successHandler((request, response, authentication) -> {
-                    CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-                    String email = oauthUser.getEmail();
-
-                    UserDetails userDetails = userDetailsService.processOAuthPostLogin(email);
-
-                    Authentication newAuth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-                    String jwt = jwtUtils.generateJwtToken(newAuth);
-                    CustomUserDetails customUserDetails = (CustomUserDetails) newAuth.getPrincipal();
-
-                    JwtResponse jwtResponse = new JwtResponse(jwt, customUserDetails.getId(), customUserDetails.getUsername(), customUserDetails.getEmail());
-
-                    ResponseEntity<JwtResponse> responseEntity = ResponseEntity.ok(jwtResponse);
-
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.getWriter().write(new ObjectMapper().writeValueAsString(responseEntity.getBody()));
-                }).failureUrl("/login?error=true"))
                 .cors(httpSecurityCorsConfigurer -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
@@ -103,20 +87,16 @@ public class SecurityConfiguration {
                     source.registerCorsConfiguration("/**", configuration);
                     httpSecurityCorsConfigurer.configurationSource(source);
                 });
-        http.authenticationProvider(
-
-                authenticationProvider());
-
-        http.addFilterBefore(
-
-                authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.authenticationProvider(authenticationProvider());
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+
+        return new ProviderManager( emailAuthenticationProvider, authenticationProvider());
     }
 
     @Bean

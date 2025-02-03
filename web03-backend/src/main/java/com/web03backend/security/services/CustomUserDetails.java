@@ -92,4 +92,5 @@ public class CustomUserDetails implements UserDetails {
         CustomUserDetails user = (CustomUserDetails) o;
         return Objects.equals(id, user.id);
     }
+
 }

@@ -20,24 +20,31 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     IUserRepository userRepository;
 
-    @Override
     @Transactional
+    public UserDetails loadUserByEmail(String email) throws Exception {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User Not Found with email: " + email));
+
+        return CustomUserDetails.build(user);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-
         return CustomUserDetails.build(user);
     }
 
-    public UserDetails processOAuthPostLogin(String email) {
-        if (userRepository.existsByEmail(email)) {
-            return userRepository.findByEmail((email));
-        }
-        UserEntity user = new UserEntity(email, "abc", email);
-        userRepository.save(user);
-
-        return CustomUserDetails.build(user);
-    }
+//    public UserDetails processOAuthPostLogin(String email) {
+//        if (userRepository.existsByEmail(email)) {
+//            return CustomUserDetails.build(userRepository.findByEmail((email)).orElseThrow(() -> new UsernameNotFoundException("User Not " +
+//                    "Found with username: " + email)));
+//        }
+//        UserEntity user = new UserEntity(email, "abc", email);
+//        userRepository.save(user);
+//
+//        return CustomUserDetails.build(user);
+//    }
 
 
 }
