@@ -1,25 +1,39 @@
 package com.web03backend.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.web03backend.domain.CustomOAuth2User;
+import com.web03backend.dto.auth.JwtResponse;
 import com.web03backend.security.jwt.AuthEntryPointJwt;
 import com.web03backend.security.jwt.AuthTokenFilter;
+import com.web03backend.security.jwt.JwtUtils;
+import com.web03backend.security.services.CustomUserDetails;
 import com.web03backend.security.services.CustomUserDetailsService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 @Configuration
@@ -28,8 +42,12 @@ public class SecurityConfiguration {
     @Autowired
     CustomUserDetailsService userDetailsService;
 
+
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -37,19 +55,11 @@ public class SecurityConfiguration {
     }
 
 
-
     private static final String[] AUTH_WHITELIST = {
             // -- Swagger UI v2
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
+            "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui.html", "/webjars/**",
             // -- Swagger UI v3 (OpenAPI)
-            "/v3/api-docs/**",
-            "/swagger-ui/**"
+            "/v3/api-docs/**", "/swagger-ui/**"
             // other public endpoints of your API may be appended to this array
     };
 
@@ -64,6 +74,26 @@ public class SecurityConfiguration {
                                 .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth2 -> oauth2.loginPage("/login").successHandler((request, response, authentication) -> {
+                    CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                    String email = oauthUser.getEmail();
+
+                    UserDetails userDetails = userDetailsService.processOAuthPostLogin(email);
+
+                    Authentication newAuth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+                    String jwt = jwtUtils.generateJwtToken(newAuth);
+                    CustomUserDetails customUserDetails = (CustomUserDetails) newAuth.getPrincipal();
+
+                    JwtResponse jwtResponse = new JwtResponse(jwt, customUserDetails.getId(), customUserDetails.getUsername(), customUserDetails.getEmail());
+
+                    ResponseEntity<JwtResponse> responseEntity = ResponseEntity.ok(jwtResponse);
+
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.setContentType("application/json");
+                    response.getWriter().write(new ObjectMapper().writeValueAsString(responseEntity.getBody()));
+                }).failureUrl("/login?error=true"))
                 .cors(httpSecurityCorsConfigurer -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
@@ -72,12 +102,14 @@ public class SecurityConfiguration {
                     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                     source.registerCorsConfiguration("/**", configuration);
                     httpSecurityCorsConfigurer.configurationSource(source);
-                })
+                });
+        http.authenticationProvider(
 
-        ;
-        http.authenticationProvider(authenticationProvider());
+                authenticationProvider());
 
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(
+
+                authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
