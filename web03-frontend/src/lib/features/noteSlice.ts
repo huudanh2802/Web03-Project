@@ -6,12 +6,16 @@ import { INote } from "@/types";
 interface NoteState {
   previewNoteList: INote[] | undefined;
   selectedNote: INote | undefined;
+  keyword: string;
+  page: number;
 }
 
 // Define the initial state using that type
 const initialState: NoteState = {
   previewNoteList: [],
   selectedNote: undefined,
+  keyword: "",
+  page: 0,
 };
 
 export const noteSlice = createSlice({
@@ -21,6 +25,12 @@ export const noteSlice = createSlice({
     setPreviewNoteList: (state, action: PayloadAction<INote[] | undefined>) => {
       state.previewNoteList = action.payload;
       state.selectedNote = action.payload ? action.payload[0] : undefined;
+    },
+    updatePage: (state, action: PayloadAction<number>) => {
+      state.page = action.payload;
+    },
+    updateKeyword: (state, action: PayloadAction<string>) => {
+      state.keyword = action.payload;
     },
     changeSelectedNote: (state, action: PayloadAction<number>) => {
       if (state.previewNoteList) {
@@ -69,6 +79,8 @@ export const {
   changeSelectedNote,
   addNewNote,
   removeNote,
+  updateKeyword,
+  updatePage,
 } = noteSlice.actions;
 
 export default noteSlice.reducer;

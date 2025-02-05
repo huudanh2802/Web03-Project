@@ -1,10 +1,16 @@
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { ChangeEventHandler } from "react";
 
-export default function SearchInput() {
+export default function SearchInput({
+  onChange,
+}: {
+  onChange: (text: string) => void;
+}) {
   return (
     <div className="relative w-full max-w-sm">
       <Input
+        onChange={(event) => onChange(event.target.value)}
         type="search"
         placeholder="Search all notes"
         className="pl-10 pr-4 py-2 w-full rounded-full border  focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-[#393939]  placeholder:text-white text-white  border-[#393939]"

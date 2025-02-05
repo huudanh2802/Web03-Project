@@ -23,6 +23,7 @@ export default function Note() {
   const [createNote] = useCreateEmptyNoteByUserMutation();
   const [deleteNote] = useDeleteNoteByIdMutation();
   const [updateNote] = useUpdateNoteMutation();
+  
   const debouncedUpdateNote = useCallback(
     debounce(async (id: number, note: string) => {
       const updatedNote = await updateNote({

@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByEmail(String email) throws Exception {
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new Exception("User Not Found with email: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
 
         return CustomUserDetails.build(user);
     }

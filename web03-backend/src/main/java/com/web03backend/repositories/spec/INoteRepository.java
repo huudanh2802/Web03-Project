@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface INoteRepository extends JpaRepository<NoteEntity, Long> {
     Page<NoteEntity> findByUserId(Long userId, Pageable pageable);
 
+    Page<NoteEntity> findByUserIdAndNoteContainingIgnoreCase(Long userId, String note, Pageable pageable);
 }

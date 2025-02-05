@@ -24,9 +24,11 @@ public class NoteController {
     @GetMapping
     public ResponseEntity<List<NoteDTO>> findNotesByUserId(Long userId,
                                                            @RequestParam(required = false)
-                                                                         @PageableDefault(page = 0, size = 10,
-                                                                                 sort = {"id"}) Pageable pageable) {
-        List<NoteDTO> notes = noteService.findAllByUserId(userId, pageable).stream()
+                                                           @PageableDefault(page = 0, size = 10,
+                                                                   sort = {"createdAt"}) Pageable pageable,
+                                                           @RequestParam(required = false)
+                                                           String keyword) {
+        List<NoteDTO> notes = noteService.findByUserIdAndNoteContainingIgnoreCase(userId, keyword, pageable).stream()
                 .map(noteEntity -> modelMapper.map(noteEntity, NoteDTO.class))
                 .collect(java.util.stream.Collectors.toList());
 
@@ -35,7 +37,7 @@ public class NoteController {
 
     @PostMapping
     public ResponseEntity<NoteDTO> createEmptyNoteByUser(Long userId) {
-        NoteDTO note = modelMapper.map( noteService.createNoteByUserId(userId), NoteDTO.class);
+        NoteDTO note = modelMapper.map(noteService.createNoteByUserId(userId), NoteDTO.class);
         return ResponseEntity.ok(note);
     }
 
@@ -46,7 +48,7 @@ public class NoteController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteNoteById(Long noteId){
+    public ResponseEntity<?> deleteNoteById(Long noteId) {
         noteService.deleteNoteById(noteId);
         return ResponseEntity.ok().build();
     }

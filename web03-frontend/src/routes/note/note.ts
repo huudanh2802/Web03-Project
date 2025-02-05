@@ -1,4 +1,4 @@
-import { INote } from "@/types";
+import { IGetNoteByUser, INote } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
@@ -17,10 +17,16 @@ export const noteAPI = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getNoteByUserId: builder.query<INote[], string>({
-      query: (userId) => ({
+    getNoteByUserId: builder.query<INote[], IGetNoteByUser>({
+      query: (req) => ({
         url: `note`,
-        params: { userId, page: 0, size: 10, sort: "createdAt" },
+        params: {
+          userId: req.userId,
+          page: req.page,
+          size: 10,
+          sort: "createdAt",
+          keyword: req.keyword,
+        },
         method: "GET",
       }),
     }),

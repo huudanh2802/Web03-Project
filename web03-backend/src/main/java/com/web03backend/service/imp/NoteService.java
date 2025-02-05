@@ -23,8 +23,11 @@ public class NoteService implements INoteService {
 
     @Transactional(readOnly = true)
 
-    public Page<NoteEntity> findAllByUserId(Long userId, Pageable pageable) {
-        return noteRepository.findByUserId(userId, pageable);
+    public Page<NoteEntity> findByUserIdAndNoteContainingIgnoreCase(Long userId, String keyword, Pageable pageable) {
+        if (keyword == null || keyword.isEmpty()) {
+            return noteRepository.findByUserId(userId, pageable);
+        }
+        return noteRepository.findByUserIdAndNoteContainingIgnoreCase(userId, keyword, pageable);
     }
 
     @Override

@@ -1,14 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { setPreviewNoteList } from "@/lib/features/noteSlice";
-import { useAppDispatch } from "@/lib/hook";
+import { useAppDispatch, useAppSelector } from "@/lib/hook";
+import { store } from "@/lib/store";
 import { useGetNoteByUserIdQuery } from "@/routes/note/note";
+import { IGetNoteByUser } from "@/types";
 import { CircleUserRound } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Provider } from "react-redux";
-import { store } from "@/lib/store";
 
 export default function DashboardLayout({
   children,
@@ -16,11 +16,28 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const { data: session, status } = useSession();
-  const router = useRouter();
-  const userId = session?.user?.id?.toString();
-  const { data: notes } = useGetNoteByUserIdQuery(userId ?? "", {
-    skip: status !== "authenticated" || !userId,
+
+  const noteValue = useAppSelector((state) => state.note);
+
+  const getNoteReq = useMemo<IGetNoteByUser>(
+    () => ({
+      userId: session?.user?.id?.toString() ?? "",
+      page: noteValue.page,
+      keyword: noteValue.keyword,
+    }),
+    [noteValue.keyword, noteValue.page, session?.user?.id]
+  );
+
+  const { data: notes, refetch } = useGetNoteByUserIdQuery(getNoteReq, {
+    skip: status !== "authenticated",
   });
+
+  useEffect(() => {
+    if (getNoteReq) {
+      refetch();
+    }
+  }, [getNoteReq, refetch]);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
