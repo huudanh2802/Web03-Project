@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { INote } from "@/types";
+import { INote, IViewNote } from "@/types";
 
 // Define a type for the slice state
 interface NoteState {
   previewNoteList: INote[] | undefined;
   selectedNote: INote | undefined;
   keyword: string;
-  page: number;
+  listSize: number;
+  size: number;
 }
 
 // Define the initial state using that type
@@ -15,19 +16,24 @@ const initialState: NoteState = {
   previewNoteList: [],
   selectedNote: undefined,
   keyword: "",
-  page: 0,
+  listSize: 0,
+  size: 7,
 };
 
 export const noteSlice = createSlice({
   name: "note",
   initialState,
   reducers: {
-    setPreviewNoteList: (state, action: PayloadAction<INote[] | undefined>) => {
-      state.previewNoteList = action.payload;
-      state.selectedNote = action.payload ? action.payload[0] : undefined;
+    setPreviewNoteList: (
+      state,
+      action: PayloadAction<IViewNote | undefined>
+    ) => {
+      state.previewNoteList = action.payload?.notes;
+      state.listSize = action.payload?.size ?? 0;
+      state.selectedNote = action.payload ? action.payload.notes[0] : undefined;
     },
-    updatePage: (state, action: PayloadAction<number>) => {
-      state.page = action.payload;
+    updateSize: (state, action: PayloadAction<number>) => {
+      state.size = action.payload;
     },
     updateKeyword: (state, action: PayloadAction<string>) => {
       state.keyword = action.payload;
@@ -80,7 +86,7 @@ export const {
   addNewNote,
   removeNote,
   updateKeyword,
-  updatePage,
+  updateSize,
 } = noteSlice.actions;
 
 export default noteSlice.reducer;

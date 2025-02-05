@@ -25,6 +25,7 @@ public class NoteService implements INoteService {
 
     public Page<NoteEntity> findByUserIdAndNoteContainingIgnoreCase(Long userId, String keyword, Pageable pageable) {
         if (keyword == null || keyword.isEmpty()) {
+
             return noteRepository.findByUserId(userId, pageable);
         }
         return noteRepository.findByUserIdAndNoteContainingIgnoreCase(userId, keyword, pageable);

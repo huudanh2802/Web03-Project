@@ -1,74 +1,72 @@
 "use client";
 
 import PreviewNote from "@/containers/dashboard/preview-note";
-import { useAppSelector } from "@/lib/hook";
+import { useAppDispatch, useAppSelector } from "@/lib/hook";
 import { INote } from "@/types";
-import { useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { LoadingPlaceholder } from "./loading-placeholder";
+import { noteSlice } from "@/lib/features/noteSlice";
+import { QueryStatus } from "@reduxjs/toolkit/query";
 
-// interface Item {
-//   id: number;
-//   content: string;
-// }
-
-export function InfiniteScroll({ noteList }: { noteList: INote[] }) {
-  // const [items, setItems] = useState<Item[]>([]);
-  // const [page, setPage] = useState(1);
-  // const [isFetching, setIsFetching] = useState(false);
+export function InfiniteScroll({
+  noteList,
+  reqStatus,
+}: {
+  noteList: INote[];
+  reqStatus: QueryStatus;
+}) {
+  const isFetching = reqStatus === "pending";
   const containerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const selectedNote = useAppSelector((state) => state.note.selectedNote);
 
-  // const fetchMoreItems = useCallback(async () => {
-  //   setIsFetching(true);
-  //   // Simulate API call
-  //   await new Promise((resolve) => setTimeout(resolve, 1000));
-  //   const newItems = Array.from({ length: 10 }, (_, i) => ({
-  //     id: (page - 1) * 10 + i + 1,
-  //     content: `Item ${(page - 1) * 10 + i + 1}`,
-  //   }));
-  //   setItems((prevItems) => [...prevItems, ...newItems]);
-  //   setPage((prevPage) => prevPage + 1);
-  //   setIsFetching(false);
-  // }, [page]);
+  const dispatch = useAppDispatch();
+  const noteValue = useAppSelector((state) => state.note);
 
-  // useEffect(() => {
-  //   const options = {
-  //     root: containerRef.current,
-  //     rootMargin: "0px",
-  //     threshold: 1.0,
-  //   };
+  const fetchMoreItems = useCallback(() => {
+    if (noteValue.size < noteValue.listSize) {
+      dispatch(noteSlice.actions.updateSize(noteValue.size + 5));
+    }
+  }, [dispatch, noteValue.listSize, noteValue.size]);
 
-  //   const observer = new IntersectionObserver((entries) => {
-  //     const target = entries[0];
-  //     if (target.isIntersecting && !isFetching) {
-  //       fetchMoreItems();
-  //     }
-  //   }, options);
+  useEffect(() => {
+    const options = {
+      root: containerRef.current,
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
 
-  //   observerRef.current = observer;
+    const observer = new IntersectionObserver((entries) => {
+      const target = entries[0];
+      if (target.isIntersecting && !isFetching) {
+        fetchMoreItems();
+      }
+    }, options);
 
-  //   return () => {
-  //     if (observerRef.current) {
-  //       observerRef.current.disconnect();
-  //     }
-  //   };
-  // }, [fetchMoreItems, isFetching]);
+    observerRef.current = observer;
 
-  // useEffect(() => {
-  //   const currentObserver = observerRef.current;
-  //   const triggerElement = document.getElementById("scroll-trigger");
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [fetchMoreItems, isFetching]);
 
-  //   if (currentObserver && triggerElement) {
-  //     currentObserver.observe(triggerElement);
-  //   }
+  useEffect(() => {
+    const currentObserver = observerRef.current;
+    const triggerElement = document.getElementById("scroll-trigger");
 
-  //   return () => {
-  //     if (currentObserver && triggerElement) {
-  //       currentObserver.unobserve(triggerElement);
-  //     }
-  //   };
-  // }, [items]);
+    if (currentObserver && triggerElement) {
+      currentObserver.observe(triggerElement);
+    }
+
+    return () => {
+      if (currentObserver && triggerElement) {
+        currentObserver.unobserve(triggerElement);
+      }
+    };
+  }, [noteValue.previewNoteList]);
 
   const PreviewNoteList = useMemo(() => {
     return noteList.map((note) => (
@@ -85,11 +83,11 @@ export function InfiniteScroll({ noteList }: { noteList: INote[] }) {
     <div className="w-full max-w-md mx-auto p-4">
       <div
         ref={containerRef}
-        className="h-full overflow-y-auto border-none rounded-lg  scrollbar-hide"
+        className="max-h-[680px] overflow-y-auto border-none rounded-lg scrollbar-hide"
       >
         <div className="space-y-4">
           {PreviewNoteList}
-          {/* {isFetching && <LoadingPlaceholder />} */}
+          {isFetching && <LoadingPlaceholder />}
           <div id="scroll-trigger" className="h-1" />
         </div>
       </div>

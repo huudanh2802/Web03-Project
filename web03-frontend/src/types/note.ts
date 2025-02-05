@@ -4,8 +4,13 @@ export interface INote {
   note: string;
 }
 
+export interface IViewNote {
+  notes: INote[];
+  size: number;
+}
+
 export interface IGetNoteByUser {
   userId: string;
-  page: number;
+  size: number;
   keyword: string;
 }

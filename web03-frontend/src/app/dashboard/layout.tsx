@@ -15,38 +15,11 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { data: session, status } = useSession();
 
-  const noteValue = useAppSelector((state) => state.note);
-
-  const getNoteReq = useMemo<IGetNoteByUser>(
-    () => ({
-      userId: session?.user?.id?.toString() ?? "",
-      page: noteValue.page,
-      keyword: noteValue.keyword,
-    }),
-    [noteValue.keyword, noteValue.page, session?.user?.id]
-  );
-
-  const { data: notes, refetch } = useGetNoteByUserIdQuery(getNoteReq, {
-    skip: status !== "authenticated",
-  });
-
-  useEffect(() => {
-    if (getNoteReq) {
-      refetch();
-    }
-  }, [getNoteReq, refetch]);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(setPreviewNoteList(notes));
-  }, [dispatch, notes]);
 
   return (
     <Provider store={store}>
-      <div className="overflow-hidden max-h-[680px] ">
+      <div className="overflow-hidden h-dvh ">
         <div className="flex row-auto items-center justify-between bg-[#393939] p-4">
           <div className="flex row-auto text-4xl font-semibold">
             <h1 className="text-[#dd7878]">Calico</h1>

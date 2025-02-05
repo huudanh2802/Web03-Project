@@ -25,7 +25,7 @@ export default function PreviewNote({
   };
   const preview = previewNote.note
     ? previewNote.note.replace(/<(.|\n)*?>/g, "")
-    : "";
+    : "New Note";
   return (
     <div>
       <Card className={selected ? "bg-[#232938]" : ""}>

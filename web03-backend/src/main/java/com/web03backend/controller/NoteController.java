@@ -1,10 +1,13 @@
 package com.web03backend.controller;
 
+import com.web03backend.domain.NoteEntity;
+import com.web03backend.dto.note.GetNoteDTO;
 import com.web03backend.dto.note.NoteDTO;
 import com.web03backend.dto.note.UpdateNoteDTO;
 import com.web03backend.service.spec.INoteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +25,16 @@ public class NoteController {
     private ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<NoteDTO>> findNotesByUserId(Long userId,
-                                                           @RequestParam(required = false)
-                                                           @PageableDefault(page = 0, size = 10,
-                                                                   sort = {"createdAt"}) Pageable pageable,
-                                                           @RequestParam(required = false)
+    public ResponseEntity<GetNoteDTO> findNotesByUserId(Long userId,
+                                                        Pageable pageable,
+                                                        @RequestParam(required = false)
                                                            String keyword) {
-        List<NoteDTO> notes = noteService.findByUserIdAndNoteContainingIgnoreCase(userId, keyword, pageable).stream()
+        Page<NoteEntity> notesPage = noteService.findByUserIdAndNoteContainingIgnoreCase(userId, keyword, pageable);
+        List<NoteDTO> notes =notesPage.stream()
                 .map(noteEntity -> modelMapper.map(noteEntity, NoteDTO.class))
                 .collect(java.util.stream.Collectors.toList());
-
-        return ResponseEntity.ok(notes);
+        GetNoteDTO res = new GetNoteDTO(notesPage.getTotalElements(),notes);
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping
