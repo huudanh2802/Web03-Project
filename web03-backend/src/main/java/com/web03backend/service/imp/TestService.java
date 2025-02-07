@@ -1,7 +1,7 @@
 package com.web03backend.service.imp;
 
 import com.web03backend.domain.TestEntity;
-import com.web03backend.repositories.ITestRepository;
+import com.web03backend.repositories.spec.ITestRepository;
 import com.web03backend.service.spec.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

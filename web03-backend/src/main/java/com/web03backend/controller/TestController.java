@@ -1,11 +1,9 @@
 package com.web03backend.controller;
 
-import com.web03backend.domain.TestEntity;
-import com.web03backend.dtos.TestDTO;
+import com.web03backend.dto.TestDTO;
 import com.web03backend.service.spec.ITestService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;

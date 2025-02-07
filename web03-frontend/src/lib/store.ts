@@ -1,16 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "./features/counter/counterSlice";
+import noteReducer from "./features/noteSlice";
+import { noteAPI } from "@/routes/note/note";
 
-export const makeStore = () => {
-  return configureStore({
-    reducer: {
-      counter: counterReducer,
-    },
-  });
-};
+export const store = configureStore({
+  reducer: {
+    note: noteReducer,
+    [noteAPI.reducerPath]: noteAPI.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(noteAPI.middleware),
+});
 
 // Infer the type of makeStore
-export type AppStore = ReturnType<typeof makeStore>;
+export type RootState = ReturnType<typeof store.getState>;
+
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<AppStore["getState"]>;
-export type AppDispatch = AppStore["dispatch"];
+export type AppDispatch = typeof store.dispatch;
