@@ -9,10 +9,10 @@ import Sidebar from "./sidebar";
 import { useSession } from "next-auth/react";
 
 export default function DashboardContainer() {
+  const [initialFetchDone, setInitialFetchDone] = useState(false);
   const { data: session, status } = useSession();
   const noteValue = useAppSelector((state) => state.note);
-
-  const [initialFetchDone, setInitialFetchDone] = useState(false);
+  const dispatch = useAppDispatch();
 
   const getNoteReq = useMemo<IGetNoteByUser>(
     () => ({
@@ -30,6 +30,7 @@ export default function DashboardContainer() {
   } = useGetNoteByUserIdQuery(getNoteReq, {
     skip: status !== "authenticated",
   });
+
   useEffect(() => {
     if (reqStatus === "fulfilled" && !initialFetchDone) {
       setInitialFetchDone(true);
@@ -41,8 +42,6 @@ export default function DashboardContainer() {
       refetch();
     }
   }, [getNoteReq, refetch, initialFetchDone]);
-
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(setPreviewNoteList(notesData));

@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react";
-import CatIcon from "../../../public/icons/cat-icon";
-import SigninDialog from "./signin-dialog";
 import { Button } from "@/components/ui/button";
-import RegistrationDialog from "./registration-dialog";
-import ConfirmEmailDialog from "./confirm-email-dialog";
 import { signIn } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
+import CatIcon from "../../../public/icons/cat-icon";
+import ConfirmEmailDialog from "./confirm-email-dialog";
+import RegistrationDialog from "./registration-dialog";
+import SigninDialog from "./signin-dialog";
 
 export default function SigninContainer() {
-  const [isSigninDialogOpen, setIsSigninDialogOpen] = useState(false);
-  const [isRegistrationDialogOpen, setIsRegistrationDialogOpen] =
-    useState(false);
-  const [isConfirmEmailDialogOpen, setIsConfirmEmailDialogOpen] =
-    useState(false);
+  // const [isSigninDialogOpen, setIsSigninDialogOpen] = useState(false);
+  // const [isRegistrationDialogOpen, setIsRegistrationDialogOpen] =
+  //   useState(false);
+  // const [isConfirmEmailDialogOpen, setIsConfirmEmailDialogOpen] =
+  //   useState(false);
 
   const handleGoogleSignIn = () => {
     signIn("google", { callbackUrl: "http://localhost:3000/dashboard" });
@@ -25,24 +25,20 @@ export default function SigninContainer() {
         <h1>Note</h1>
       </div>
       <CatIcon style={{ width: 172 }} />
-      <Button
+      {/* <Button
         className="my-4 rounded-3xl"
         onClick={() => setIsSigninDialogOpen(!isSigninDialogOpen)}
       >
         Sign in
-      </Button>
+      </Button> */}
       <Button
         className="my-4 rounded-3xl flex items-center"
         onClick={handleGoogleSignIn}
       >
-        <img
-          src="/icons/google-icon.svg"
-          alt="Google"
-          className="w-6 h-6 mr-2"
-        />
+        <FcGoogle />
         Sign in with Google
       </Button>
-      <SigninDialog
+      {/* <SigninDialog
         isSigninDialogOpen={isSigninDialogOpen}
         setIsSigninDialogOpen={setIsSigninDialogOpen}
         setIsRegistrationDialogOpen={setIsRegistrationDialogOpen}
@@ -56,7 +52,7 @@ export default function SigninContainer() {
       <ConfirmEmailDialog
         isConfirmEmailDialogOpen={isConfirmEmailDialogOpen}
         setIsConfirmEmailDialogOpen={setIsConfirmEmailDialogOpen}
-      />
+      /> */}
 
       <h2 className="mt-16">
         The cross platform Apple Note altenative you have been looking for

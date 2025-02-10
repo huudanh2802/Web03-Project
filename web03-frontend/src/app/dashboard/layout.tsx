@@ -15,8 +15,6 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   return (
     <Provider store={store}>
       <div className="overflow-hidden h-dvh ">

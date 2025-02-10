@@ -16,14 +16,14 @@ import { Editor } from "@tinymce/tinymce-react";
 
 export default function Note() {
   const selectedNote = useAppSelector((state) => state.note.selectedNote);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const userId = session?.user?.id?.toString();
   const dispatch = useAppDispatch();
 
   const [createNote] = useCreateEmptyNoteByUserMutation();
   const [deleteNote] = useDeleteNoteByIdMutation();
   const [updateNote] = useUpdateNoteMutation();
-  
+
   const debouncedUpdateNote = useCallback(
     debounce(async (id: number, note: string) => {
       const updatedNote = await updateNote({
@@ -36,11 +36,6 @@ export default function Note() {
   );
 
   const editorRef = useRef<unknown | null>(null);
-  const log = () => {
-    if (editorRef.current) {
-      console.log(editorRef.current.getContent());
-    }
-  };
 
   return (
     <div className="m-4">
