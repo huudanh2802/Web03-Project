@@ -24,19 +24,11 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x web03-backend/gradlew
 
-      - name: Set up Gradle 8.4
-        run: |
-          wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip
-          mkdir /opt/gradle
-          unzip -d /opt/gradle gradle-8.4-bin.zip
-          echo "export PATH=/opt/gradle/gradle-8.4/bin:$PATH" >> $HOME/.bashrc
-          source $HOME/.bashrc
-          gradle --version
-
       - name: Build Docker image
         working-directory: web03-backend
         run: |
-          docker build -t app .
+         docker build -t ghcr.io/${{ github.actor }}/web03-project:latest -f web03-backend/Dockerfile web03-backend/
+
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
