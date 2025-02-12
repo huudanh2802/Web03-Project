@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SignupFormInputs } from "@/interfaces";
+import { SignupFormInputs } from "@/types";
 import { ArrowRightCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
@@ -39,32 +39,32 @@ export default function RegistrationDialog({
     },
   });
   const handleSignup: SubmitHandler<SignupFormInputs> = async (values) => {
-    try {
-      const signUpRequest = {
-        username: values.username,
-        password: values.password,
-        email: values.email,
-      };
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(signUpRequest),
-        }
-      );
-      if (res.ok) {
-        setIsRegistrationDialogOpen(false);
-        setIsConfirmEmailDialogOpen(true);
-      } else {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "An error occurred");
-      }
-    } catch (e) {
-      setError("root", { type: "custom", message: e.message });
-    }
+    // try {
+    //   const signUpRequest = {
+    //     username: values.username,
+    //     password: values.password,
+    //     email: values.email,
+    //   };
+    //   const res = await fetch(
+    //     `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify(signUpRequest),
+    //     }
+    //   );
+    //   if (res.ok) {
+    //     setIsRegistrationDialogOpen(false);
+    //     setIsConfirmEmailDialogOpen(true);
+    //   } else {
+    //     const errorData = await res.json();
+    //     throw new Error(errorData.message || "An error occurred");
+    //   }
+    // } catch (e:unknown) {
+    //   setError("root", { type: "custom", message: e.message });
+    // }
   };
   return (
     <Dialog
