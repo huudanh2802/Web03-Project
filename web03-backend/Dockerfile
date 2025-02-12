@@ -1,6 +1,5 @@
-
 # Stage 1: Build the application
-FROM gradle:7.5.1-jdk17 AS build
+FROM gradle:8.4-jdk17 AS build
 WORKDIR /app
 COPY . .
 RUN gradle build --no-daemon -x test -Dspring.profiles.active=build
