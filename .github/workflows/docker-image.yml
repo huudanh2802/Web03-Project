@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -23,7 +24,10 @@ jobs:
 
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x web03-backend/gradlew
-        
+
+      - name: Run Gradle Build
+        run: docker run --rm ghcr.io/${{ github.actor }}/web03-backend:latest gradle clean build --no-daemon -x test
+
       - name: Build Docker image
         working-directory: web03-backend
         run: |
