@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SessionProvider } from "next-auth/react";
 import GlobalProvider from "@/providers/global-provider";
 import AuthContainer from "@/containers/signin/auth-container";
 
