@@ -1,5 +1,5 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:061051240995:task-definition/calico-note-service-task-definition:1",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:061051240995:task-definition/calico-note-service-task-definition:2",
     "containerDefinitions": [
         {
             "name": "calico-note-service-image",
@@ -7,10 +7,10 @@
             "cpu": 0,
             "portMappings": [
                 {
+                    "name": "calico-note-service-image-80-tcp",
                     "containerPort": 80,
                     "hostPort": 80,
                     "protocol": "tcp",
-                    "name": "calico-note-service-image-80-tcp",
                     "appProtocol": "http"
                 }
             ],
@@ -19,6 +19,40 @@
             "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],
+            "secrets": [
+                {
+                    "name": "SPRING_DATASOURCE_URL",
+                    "valueFrom": "arn:aws:ssm:us-east-1:061051240995:parameter/calico-note/datasource-url"
+                },
+                {
+                    "name": "SPRING_DATASOURCE_USERNAME",
+                    "valueFrom": "arn:aws:ssm:us-east-1:061051240995:parameter/calico-note/datasource-username"
+                },
+                {
+                    "name": "SPRING_DATASOURCE_PASSWORD",
+                    "valueFrom": "arn:aws:ssm:us-east-1:061051240995:parameter/calico-note/datasource-password"
+                },
+                {
+                    "name": "GOOGLE_CLIENT_ID",
+                    "valueFrom": "arn:aws:ssm:us-east-1:061051240995:parameter/calico-note/google-client-id"
+                },
+                {
+                    "name": "GOOGLE_CLIENT_SECRET",
+                    "valueFrom": "arn:aws:ssm:us-east-1:061051240995:parameter/calico-note/google-client-secret"
+                },
+                {
+                    "name": "GOOGLE_CLIENT_SCOPE",
+                    "valueFrom": "arn:aws:ssm:us-east-1:061051240995:parameter/calico-note/google-client-scope"
+                },
+                {
+                    "name": "JWT_SECRET",
+                    "valueFrom": "arn:aws:ssm:us-east-1:061051240995:parameter/calico-note/jwt-secret"
+                },
+                {
+                    "name": "JWT_EXPIRE_MS",
+                    "valueFrom": "arn:aws:ssm:us-east-1:061051240995:parameter/calico-note/jwt-expire-ms"
+                }
+            ],
             "ulimits": [],
             "logConfiguration": {
                 "logDriver": "awslogs",
@@ -39,7 +73,7 @@
     "taskRoleArn": "arn:aws:iam::061051240995:role/ecs-execution-role",
     "executionRoleArn": "arn:aws:iam::061051240995:role/ecs-execution-role",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 2,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -59,6 +93,9 @@
             "name": "com.amazonaws.ecs.capability.task-iam-role"
         },
         {
+            "name": "ecs.capability.secrets.ssm.environment-variables"
+        },
+        {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
         },
         {
@@ -73,16 +110,17 @@
         "EC2",
         "FARGATE"
     ],
-    "runtimePlatform": {
-        "cpuArchitecture": "X86_64",
-        "operatingSystemFamily": "LINUX"
-    },
     "requiresCompatibilities": [
         "FARGATE"
     ],
     "cpu": "1024",
     "memory": "3072",
-    "registeredAt": "2025-02-14T05:46:02.975000+00:00",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2025-02-14T09:50:27.163Z",
     "registeredBy": "arn:aws:iam::061051240995:user/iamadmin",
-    "enableFaultInjection": false
+    "enableFaultInjection": false,
+    "tags": []
 }

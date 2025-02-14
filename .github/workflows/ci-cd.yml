@@ -3,6 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches: ["main"]
+
 env:
   AWS_REGION: "us-east-1"
   ECR_REPOSITORY: ghcr.io/${{ github.actor }}/web03-project
@@ -11,7 +12,7 @@ env:
   ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION
   CONTAINER_NAME: MY_CONTAINER_NAME
 jobs:
-  build-and-deploy-image:
+  build-image:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,13 +37,19 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push Docker image to GHCR
-        id: push-image
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker push ghcr.io/${{ github.actor }}/web03-project:calico-note-service
           echo "image=ghcr.io/${{ github.actor }}/web03-project:calico-note-service" >> $GITHUB_ENV
 
+  deploy-image:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    runs-on: ubuntu-latest
+    needs: build-image
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -56,7 +63,7 @@ jobs:
         with:
           task-definition: ecs-task-definition.json
           container-name: calico-note-service-image
-          image: ${{ steps.push-image.outputs }}
+          image: ${{ needs.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
