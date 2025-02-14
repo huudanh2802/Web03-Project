@@ -55,11 +55,16 @@ jobs:
           role-to-assume: arn:aws:iam::061051240995:role/github-aws-oicd
           aws-region: "us-east-1"
 
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ calico-note-service-task-definition:2 }} \
+          --query taskDefinition > ecs-task-definition.json
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ./ecs-task-definition.json
+          task-definition: ecs-task-definition.json
           container-name: calico-note-service-image
           image: ${{ needs.build-and-push-image.outputs.image }}
 
