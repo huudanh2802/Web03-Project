@@ -17,7 +17,9 @@ public class WebConfig implements WebMvcConfigurer {
                         .allowedOrigins("http://localhost:3000","https://web03-project.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .allowCredentials(true)
+                        .exposedHeaders("Access-Control-Allow-Origin");
+
             }
         };
     }
