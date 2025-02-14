@@ -3,10 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: ["main"]
-permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: read # This is required for actions/checkout
-
 env:
   AWS_REGION: "us-east-1"
   ECR_REPOSITORY: ghcr.io/${{ github.actor }}/web03-project
