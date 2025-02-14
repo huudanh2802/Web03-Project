@@ -15,7 +15,7 @@ export default function SigninContainer() {
   //   useState(false);
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "http://localhost:3000/dashboard" });
+    signIn("google", { callbackUrl: `${process.env.NEXTAUTH_URL}/dashboard` });
   };
 
   return (

@@ -80,7 +80,7 @@ public class SecurityConfiguration {
                 )
                 .cors(httpSecurityCorsConfigurer -> {
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://web03-project.vercel.app"));
                     configuration.setAllowedMethods(Arrays.asList("*"));
                     configuration.setAllowedHeaders(Arrays.asList("*"));
                     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
