@@ -14,7 +14,8 @@ env:
 jobs:
   build-image:
     runs-on: ubuntu-latest
-
+    outputs:
+      image: ${{ steps.push-image.outputs.image }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
