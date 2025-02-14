@@ -60,7 +60,7 @@ jobs:
         with:
           task-definition: ecs-task-definition.json
           container-name: calico-note-service-image
-          image: ${{ build-image.outputs }}
+          image: ${{ steps.build-image.outputs }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
