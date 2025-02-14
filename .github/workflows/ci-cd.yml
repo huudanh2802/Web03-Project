@@ -41,7 +41,7 @@ jobs:
         id: push-image
         run: |
           docker push ghcr.io/${{ github.actor }}/web03-project:calico-note-service
-          echo "image=ghcr.io/${{ github.actor }}/web03-project:calico-note-service" >> $GITHUB_ENV
+          echo "image=ghcr.io/${{ github.actor }}/web03-project:calico-note-service" >> $GITHUB_OUTPUT
 
   deploy-image:
     permissions:
