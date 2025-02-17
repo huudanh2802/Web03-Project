@@ -113,13 +113,22 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 ### Building and Running with Docker Compose
 
-1. Build and start the containers:
+1. Build and start the backend:
 
    ```sh
+   cd web03-backend
    docker-compose up
    ```
 
-2. Access the application at `http://localhost:3000`.
+2. Build and start the frontend:
+
+   ```sh
+   cd web03-frontend
+   npm install --force
+   npm run dev
+   ```
+
+3. Access the application at `http://localhost:3000`.
 
 ## CI/CD Pipeline
 
